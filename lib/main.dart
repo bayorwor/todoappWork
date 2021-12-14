@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import "package:flutter/cupertino.dart";
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:todoapp/CLient/network_helper.dart';
+import 'package:todoapp/SharedData/Todo_Data.dart';
 import 'package:todoapp/custom_widgets/todo_card.dart';
 
 void main() {
@@ -19,11 +23,28 @@ class TodoApp extends StatelessWidget {
   }
 }
 
-class TodoHome extends StatelessWidget {
+class TodoHome extends StatefulWidget {
   const TodoHome({Key? key}) : super(key: key);
 
   @override
+  State<TodoHome> createState() => _TodoHomeState();
+}
+
+class _TodoHomeState extends State<TodoHome> {
+  late List<Future<TodoData>> todoList;
+
+  @override
+  void initState() {
+    super.initState();
+    todoList = NetworkHelper().getTodoData(endpoint: "todos/")
+        as List<Future<TodoData>>;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    todoList.forEach((val) {
+      print(val);
+    });
     return Scaffold(
       backgroundColor: Color(0xFFF4F7FE),
       appBar: AppBar(
