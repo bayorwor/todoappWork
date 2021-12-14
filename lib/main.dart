@@ -31,20 +31,18 @@ class TodoHome extends StatefulWidget {
 }
 
 class _TodoHomeState extends State<TodoHome> {
-  late List<Future<TodoData>> todoList;
+  late Future<TodoData> todoList;
 
   @override
   void initState() {
+    todoList = NetworkHelper().getTodoData(endpoint: "todos/");
     super.initState();
-    todoList = NetworkHelper().getTodoData(endpoint: "todos/")
-        as List<Future<TodoData>>;
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    todoList.forEach((val) {
-      print(val);
-    });
+    print(todoList);
     return Scaffold(
       backgroundColor: Color(0xFFF4F7FE),
       appBar: AppBar(

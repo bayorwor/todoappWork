@@ -10,7 +10,7 @@ class TodoData {
 
   TodoData({this.id, this.title, this.description, this.status, this.date});
 
-  factory TodoData.fromJson(Map<String, dynamic> json) {
+  factory TodoData.fromJson(json) {
     return TodoData(
       id: json['id'] as String,
       title: json['title'] as String,

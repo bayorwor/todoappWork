@@ -9,18 +9,21 @@ class NetworkHelper {
   String baseUrl = "https://todo-yison.herokuapp.com/";
 
   Future<TodoData> getTodoData({String endpoint = ""}) async {
+    var client = http.Client();
+    TodoData TodoModel  = TodoData();
     try {
-      final response = await http.get(
+      final response = await client.get(
         Uri.parse(baseUrl + endpoint),
         headers: {"Content-Type": "application/json"},
       );
       if (response.statusCode == 200) {
-        return TodoData.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to load data');
+        TodoModel = TodoData.fromJson(json.decode(response.body));
+        return TodoModel;
       }
-    } catch (e) {
-      throw Exception(e.toString());
+      return TodoModel;
+    } catch (Expetion) {
+            return TodoModel;
+      
     }
   }
 
@@ -42,9 +45,8 @@ class NetworkHelper {
 
       if (response.statusCode == 200) {
         return TodoData.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to Create data');
-      }
+      } 
+      return TodoData.fromJson(json.decode(response.body));
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -71,9 +73,8 @@ class NetworkHelper {
 
       if (response.statusCode == 200) {
         return TodoData.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to Update data');
-      }
+      } 
+      return TodoData.fromJson(json.decode(response.body));
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -90,9 +91,8 @@ Future<TodoData> deleteTodoData({required String id}) async {
 
       if (response.statusCode == 200) {
         return TodoData.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to Delete data');
       }
+      return TodoData.fromJson(json.decode(response.body));
     } catch (e) {
       throw Exception(e.toString());
     }
