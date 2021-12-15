@@ -21,7 +21,8 @@ class NetworkHelper {
         return TodoModel;
       }
       return TodoModel;
-    } catch (Expetion) {
+    } catch (e) {
+           print(e);
             return TodoModel;
       
     }
@@ -33,8 +34,10 @@ class NetworkHelper {
       required String description,
       bool? status,
       required String date_time}) async {
+    var client = http.Client();
+    var TodoModel = TodoData();
     try {
-      final response = await http.post(Uri.parse(baseUrl + endpoint), headers: {
+      final response = await client.post(Uri.parse(baseUrl + endpoint), headers: {
         "Content-Type": "application/json"
       }, body: {
         "title": title,
@@ -44,11 +47,12 @@ class NetworkHelper {
       });
 
       if (response.statusCode == 200) {
-        return TodoData.fromJson(json.decode(response.body));
+        TodoModel =  TodoData.fromJson(json.decode(response.body));
       } 
-      return TodoData.fromJson(json.decode(response.body));
+      return TodoModel;
     } catch (e) {
-      throw Exception(e.toString());
+      print(e);
+      return TodoModel;
     }
   }
 
@@ -60,9 +64,12 @@ class NetworkHelper {
     bool? status,
     String? date_time,
   }) async {
+    var client = http.Client();
+    var TodoModel = TodoData();
+
     try {
       final response =
-          await http.put(Uri.parse(baseUrl + endpoint + id), headers: {
+          await client.put(Uri.parse(baseUrl + endpoint + id), headers: {
         "Content-Type": "application/json"
       }, body: {
         "title": title ?? TodoData().title,
@@ -72,11 +79,12 @@ class NetworkHelper {
       });
 
       if (response.statusCode == 200) {
-        return TodoData.fromJson(json.decode(response.body));
+        TodoModel = TodoData.fromJson(json.decode(response.body));
       } 
-      return TodoData.fromJson(json.decode(response.body));
+      return TodoModel;
     } catch (e) {
-      throw Exception(e.toString());
+      print(e);
+      return TodoModel;
     }
   }
 
@@ -84,17 +92,20 @@ class NetworkHelper {
 
 
 Future<TodoData> deleteTodoData({required String id}) async {
+    var client = http.Client();
+    var TodoModel = TodoData();
     try {
-      final response = await http.delete(Uri.parse(baseUrl + id), headers: {
+      final response = await client.delete(Uri.parse(baseUrl + id), headers: {
         "Content-Type": "application/json"
       });
 
       if (response.statusCode == 200) {
-        return TodoData.fromJson(json.decode(response.body));
+        TodoModel = TodoData.fromJson(json.decode(response.body));
       }
-      return TodoData.fromJson(json.decode(response.body));
+      return TodoModel;
     } catch (e) {
-      throw Exception(e.toString());
+      print(e);
+      return TodoModel;
     }
   }
 
