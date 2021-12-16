@@ -1,22 +1,38 @@
 // ignore_for_file: file_names
 
+import 'dart:convert';
 
 class TodoData {
-  String? id;
-  String? title;
-  String? description;
-  String? status;
-  String? date;
+  bool? status;
+  String? message;
+  List<DataList>? data;
 
-  TodoData({this.id, this.title, this.description, this.status, this.date});
+  TodoData({this.status, this.message, this.data});
 
   factory TodoData.fromJson(json) {
     return TodoData(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      status: json['status'] as String,
-      date: json['date'] as String,
+      message: json["message"],
+      status: json["status"],
+      data: List<DataList>.from(json["data"].map((x) => DataList.fromJson(x))),
     );
+  }
+}
+
+class DataList {
+  String? id;
+  String? title;
+  String? description;
+  bool? status;
+  String? date;
+
+  DataList({this.id, this.title, this.description, this.status, this.date});
+
+  factory DataList.fromJson(json) {
+    return DataList(
+        id: json["id"],
+        title: json["title"],
+        description: json["description"],
+        status: json["status"],
+        date: json["date_time"]);
   }
 }
