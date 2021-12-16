@@ -31,18 +31,18 @@ class TodoHome extends StatefulWidget {
 }
 
 class _TodoHomeState extends State<TodoHome> {
-  late Future<TodoData> todoList;
+  late Future<TodoData?> todoList;
 
   @override
   void initState() {
-    todoList = NetworkHelper().getTodoData(endpoint: "todos/");
-    super.initState();
-    
+     super.initState();
+    todoList = NetworkHelper().getTodoData(endpoint: "todos");
+   
   }
 
   @override
   Widget build(BuildContext context) {
-    print(todoList);
+  
     return Scaffold(
       backgroundColor: Color(0xFFF4F7FE),
       appBar: AppBar(
@@ -64,12 +64,23 @@ class _TodoHomeState extends State<TodoHome> {
             ),
             Icon(Icons.search)
           ]),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return TodoCard();
-        },
-        itemCount: 10,
-      ),
+      body: FutureBuilder<TodoData?>(
+          future: todoList,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.separated(
+                itemCount: snapshot.data!.data!.length,
+                itemBuilder: (context, index){
+                  return TodoCard(Tododata: snapshot.data!.data![index]);
+
+              }, separatorBuilder: (context, index) {
+                return Divider();},
+
+                );
+            }
+
+            return Center(child: CircularProgressIndicator());
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Icon(
@@ -86,7 +97,7 @@ class _TodoHomeState extends State<TodoHome> {
                 color: Color(0xFFDEDEDE),
                 height: MediaQuery.of(context).size.height - 150,
                 child: ListView.builder(
-                    itemBuilder: (context, index) => TodoCard(), itemCount: 10),
+                    itemBuilder: (context, index) => Text("Completed task"), itemCount: 10),
               ),
             );
           },

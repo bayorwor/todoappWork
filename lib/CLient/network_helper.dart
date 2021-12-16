@@ -11,18 +11,28 @@ class NetworkHelper {
   Future<TodoData> getTodoData({String endpoint = ""}) async {
     var client = http.Client();
     TodoData TodoModel  = TodoData();
+      //     http.Response response = await client.get(
+      //   Uri.parse(baseUrl + endpoint),
+      //   headers: {"Content-Type": "application/json"},
+      // );
+
+      //  TodoModel = TodoData.fromJson(json.decode(response.body));
+      //  print(TodoModel);
+      //  return TodoModel;
     try {
-      final response = await client.get(
+      http.Response response = await client.get(
         Uri.parse(baseUrl + endpoint),
         headers: {"Content-Type": "application/json"},
       );
       if (response.statusCode == 200) {
-        TodoModel = TodoData.fromJson(json.decode(response.body));
+        TodoModel = TodoData.fromJson(jsonDecode(response.body));
+        print(TodoModel);
         return TodoModel;
       }
       return TodoModel;
     } catch (e) {
-           print(e);
+      
+      print(e);
             return TodoModel;
       
     }
@@ -72,10 +82,10 @@ class NetworkHelper {
           await client.put(Uri.parse(baseUrl + endpoint + id), headers: {
         "Content-Type": "application/json"
       }, body: {
-        "title": title ?? TodoData().title,
-        "description": description ?? TodoData().description,
+        "title": title ,
+        "description": description ,
         "status": status ?? false,
-        "date_time": date_time ?? TodoData().date
+        "date_time": date_time 
       });
 
       if (response.statusCode == 200) {
