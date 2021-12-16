@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, void_checks, avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
 import "package:flutter/cupertino.dart";
@@ -35,14 +35,12 @@ class _TodoHomeState extends State<TodoHome> {
 
   @override
   void initState() {
-     super.initState();
+    super.initState();
     todoList = NetworkHelper().getTodoData(endpoint: "todos");
-   
   }
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       backgroundColor: Color(0xFFF4F7FE),
       appBar: AppBar(
@@ -70,13 +68,13 @@ class _TodoHomeState extends State<TodoHome> {
             if (snapshot.hasData) {
               return ListView.separated(
                 itemCount: snapshot.data!.data!.length,
-                itemBuilder: (context, index){
+                itemBuilder: (context, index) {
                   return TodoCard(Tododata: snapshot.data!.data![index]);
-
-              }, separatorBuilder: (context, index) {
-                return Divider();},
-
-                );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+              );
             }
 
             return Center(child: CircularProgressIndicator());
@@ -96,8 +94,24 @@ class _TodoHomeState extends State<TodoHome> {
               builder: (context) => Container(
                 color: Color(0xFFDEDEDE),
                 height: MediaQuery.of(context).size.height - 150,
-                child: ListView.builder(
-                    itemBuilder: (context, index) => Text("Completed task"), itemCount: 10),
+                child: FutureBuilder<TodoData?>(
+                    future: todoList,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var data = snapshot.data;
+                        for (int i = 0; i < data!.data!.length; i++) {
+                          if (data!.data![i].status == false) {
+                            return TodoCard(Tododata: data.data![i]);
+                          }
+                        }
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                            child: CircularProgressIndicator.adaptive());
+                      }
+
+                      return Center(child: Text("No Completed Task"));
+                    }),
               ),
             );
           },
@@ -124,7 +138,7 @@ class _TodoHomeState extends State<TodoHome> {
                     ),
                     Icon(Icons.keyboard_arrow_down)
                   ]),
-                  Text("24")
+                  Text("")
                 ],
               ),
             ),
